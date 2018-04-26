@@ -16,6 +16,10 @@
 #define ENA PINB4
 #define ENB PINE3
 
+
+void forward1s();
+void backward1s();
+
 void setupMotors();
 void setDirectionForward();
 void setDirectionBackward();

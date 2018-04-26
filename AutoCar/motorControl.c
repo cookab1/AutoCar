@@ -14,7 +14,23 @@
  */ 
 
 #include <avr/io.h>
+#include "acx.h"
+#include "acxserial.h"
 #include "motorControl.h"
+
+void forward1s() {
+	setDirectionForward();
+	setSpeed(0xA0);
+	x_delay(1000);
+	stop();
+}
+
+void backward1s() {
+	setDirectionBackward();
+	setSpeed(0xA0);
+	x_delay(1000);
+	stop();
+}
 
 /**
  * Direction forward for both wheels
@@ -38,13 +54,24 @@ void setDirectionBackward() {
 }
 
 /**
- * Stop both wheels
+ * Set speed of both wheels
  *
- * Changes direction setting so wheels have no direction to turn.
- * Speed setting left unchanged.
+ * Accepted values for motor range from 0x90 (low) to 0xFF (max).
+ * This is due to motor having a minimum accepted voltage of around 6V.
+ * A minimum value just above half is to make sure inconsistency in voltage
+ * won't just stop the wheel suddenly.
+ */
+void setSpeed(uint8_t percent) {
+	OCR4A = percent;
+	OCR3A = percent;
+}
+
+/**
+ * Stops wheels from turning, and sets speed to 0 (turns off signal to save power)
  */
 void stop() {
 	PORTC &= 0xF0;
+	setSpeed(0x00);
 }
 
 /**
@@ -109,10 +136,8 @@ void leftDirectionBackward() {
 /**
  * Set speed for right wheel as percentage of power.
  *
- * Accepted values for motor range from 0x90 (low) to 0xFF (max).
- * This is due to motor having a minimum accepted voltage of around 6V.
- * A minimum value just above half is to make sure inconsistency in voltage 
- * won't just stop the wheel suddenly.
+ * Acceptable range for percent value: 0x90 to 0xFF
+ * See setSpeed for full explanation.
  */
 void rightSpeed (uint8_t percent) {
 	OCR4A = percent;
@@ -121,7 +146,8 @@ void rightSpeed (uint8_t percent) {
 /**
  * Set speed for left wheel as percentage of power.
  *
- * See rightSpeed description for proper use.
+ * Acceptable range for percent value: 0x90 to 0xFF
+ * See setSpeed for full explanation.
  */
 void leftSpeed (uint8_t percent) {
 	OCR3A = percent;
