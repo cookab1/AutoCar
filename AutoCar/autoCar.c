@@ -6,18 +6,26 @@
  */ 
 
 #include <avr/io.h>
-#include "tapeTracker.h"
-#include "motorControl.h"
+#include <util/delay.h>
+#include "PartClasses/tapeTracker.h"
+#include "PartClasses/motorControl.h"
+#include "PartClasses/RangingSensor.h"
 #include "autoCar.h"
+#include "HelperClasses/acx.h"
+#include "HelperClasses/acxserial.h"
+#include "HelperClasses/sw_delay.h"
 
 int main(void)
 {
-	setUp()
+	setUp();
 	
 	//initialize threads
-	x_new(1, trackListener, true);
-	
+	//x_new(1, trackListener, true);
+	//x_delay(5000);
+	forward1s();
+	//backward1s();
 	//thread 0
+	DDRB = 0x80;
     while (1) 
     {
 		
@@ -28,12 +36,13 @@ void trackListener() {
 	if(!onTrack()) {
 		//correct alignment
 	}
+	x_yield();
 }
 
 void setUp() {
-	x_init();
+	//x_init();
 	initTracker();
-	setupMotors();
+	init_motors();
 }
 
 

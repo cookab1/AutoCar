@@ -20,7 +20,7 @@
 void forward1s();
 void backward1s();
 
-void setupMotors();
+void init_motors();
 void setDirectionForward();
 void setDirectionBackward();
 void setSpeed(uint8_t);

@@ -10,5 +10,6 @@
 #define AUTOCAR_H_
 
 void trackListener();
+void setUp();
 
 #endif /* AUTOCAR_H_ */

@@ -14,21 +14,26 @@
  */ 
 
 #include <avr/io.h>
-#include "acx.h"
-#include "acxserial.h"
+#include <util/delay.h>
+#include "../HelperClasses/acx.h"
+#include "../HelperClasses/acxserial.h"
 #include "motorControl.h"
 
 void forward1s() {
 	setDirectionForward();
-	setSpeed(0xA0);
-	x_delay(1000);
+	rightSpeed(0xFF);
+	leftSpeed(0xFF);
+	//x_delay(1000);
+	_delay_ms(5000);
 	stop();
 }
 
 void backward1s() {
 	setDirectionBackward();
-	setSpeed(0xA0);
-	x_delay(1000);
+	rightSpeed(0xA0);
+	leftSpeed(0xA0);
+	//x_delay(1000);
+	_delay_ms(1000);
 	stop();
 }
 
@@ -77,7 +82,7 @@ void stop() {
 /**
  * Setup timers and PWM settings for wheel speed control
  */
-void setupMotors() {	
+void init_motors() {	
 	//porth 3 - OC4A - timer 4 - ena - pin 6
 	//porte 3 - OC3A - timer 3 - enb - pin 5
 	

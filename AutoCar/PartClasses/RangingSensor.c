@@ -7,9 +7,10 @@
 
 #include <avr/io.h>
 #include <avr/interrupt.h>
-#include "acx.h"
+#include "../HelperClasses/acx.h"
+#include "../HelperClasses/acxserial.h"
 #include "RangingSensor.h"
-#include "sw_delay.h"
+#include "../HelperClasses/sw_delay.h"
 
 //#define TRIG_PIN (1 << PB3)
 //#define ECHO_PIN (1 << PB2)
