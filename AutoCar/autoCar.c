@@ -19,30 +19,51 @@ int main(void)
 {
 	setUp();
 	
+	x_init();
 	//initialize threads
-	//x_new(1, trackListener, true);
+	x_new(1, trackListener, true);
+	//x_new(2, blinky, true);
 	//x_delay(5000);
-	forward1s();
+	//forward1s();
 	//backward1s();
+	
+	setDirectionForward();
+	rightSpeed(0xFF);
+	leftSpeed(0xFF);
 	//thread 0
-	DDRB = 0x80;
     while (1) 
     {
-		
-    }
+		x_delay(100);
+		/*
+		setDirectionBackward();
+		rightSpeed(0xA0);
+		leftSpeed(0xA0);
+		x_delay(100);
+		*/
+	}
 }
 
 void trackListener() {
-	if(!onTrack()) {
-		//correct alignment
+	while(1) {
+		if(onTrack()) {
+			stop();
+			//correct alignment
+		}
+		x_delay(5);
 	}
-	x_yield();
 }
 
 void setUp() {
-	//x_init();
-	initTracker();
+	init_tracker();
 	init_motors();
+}
+
+void blinky() {
+	DDRB = 0x80;
+	while(1) {
+		PORTB ^= 0x80;
+		x_delay(100);
+	}
 }
 
 

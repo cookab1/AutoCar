@@ -10,17 +10,17 @@
 
 int pinUsed;
 
-int initTracker(int pin)
+void init_tracker()
 {
-	pinUsed = pin;
+	//pinUsed = pin;
 	DDRF = 0x00;
 }
 
 //returns true if black is being seen
 //returns false if something visible is there
-int onTrack() 
+int offTrack()
 {
-	if ((PINF & (1 << pinUsed)) == 0)
+	if ((PINF & (1 << 0)) == 0)
 		return 1;
 	else
 		return 0;

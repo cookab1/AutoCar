@@ -9,7 +9,7 @@
 #ifndef TAPETRACKER_H_
 #define TAPETRACKER_H_
 
-int initTracker();
+void init_tracker();
 int onTrack();
 
 #endif /* TAPETRACKER_H_ */
