@@ -7,6 +7,7 @@
 
 #include <avr/io.h>
 #include "tapeTracker.h"
+#include "motorControl.h"
 #include "autoCar.h"
 
 int main(void)
