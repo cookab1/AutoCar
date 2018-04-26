@@ -8,15 +8,19 @@
 #include <avr/io.h>
 #include <util/delay.h>
 
+int pinUsed;
 
-int initTracker()
+int initTracker(int pin)
 {
-	DDRF = 0x00;	
+	pinUsed = pin;
+	DDRF = 0x00;
 }
 
+//returns true if black is being seen
+//returns false if something visible is there
 int onTrack() 
 {
-	if ((PINF & 0x01) == 0)
+	if ((PINF & (1 << pinUsed)) == 0)
 		return 1;
 	else
 		return 0;
