@@ -33,6 +33,7 @@ void trackListener() {
 void setUp() {
 	x_init();
 	initTracker();
+	setupMotors();
 }
 
 
