@@ -10,10 +10,12 @@
 #include "PartClasses/tapeTracker.h"
 #include "PartClasses/motorControl.h"
 #include "PartClasses/RangingSensor.h"
+#include "PartClasses/PhotoInterruptor.h"
 #include "autoCar.h"
 #include "HelperClasses/acx.h"
 #include "HelperClasses/acxserial.h"
 #include "HelperClasses/sw_delay.h"
+#include "navigation.h"
 
 int main(void)
 {
@@ -27,13 +29,15 @@ int main(void)
 	//forward1s();
 	//backward1s();
 	
-	setDirectionForward();
-	rightSpeed(0xFF);
-	leftSpeed(0xFF);
+	//setDirectionForward();
+	//rightSpeed(0xFF);
+	//leftSpeed(0xFF);
 	//thread 0
     while (1) 
     {
-		x_delay(100);
+		go_straight(100, 0x80, FRWD);
+		x_delay(5000);
+		go_straight(100, 0x80, BKWD);
 		/*
 		setDirectionBackward();
 		rightSpeed(0xA0);
@@ -45,7 +49,7 @@ int main(void)
 
 void trackListener() {
 	while(1) {
-		if(onTrack()) {
+		if(offTrack()) {
 			stop();
 			//correct alignment
 		}
@@ -56,6 +60,7 @@ void trackListener() {
 void setUp() {
 	init_tracker();
 	init_motors();
+	init_photoInterruptors();
 }
 
 void blinky() {

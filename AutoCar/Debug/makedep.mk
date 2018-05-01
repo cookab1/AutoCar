@@ -6,7 +6,11 @@ autoCar.c
 
 HelperClasses\sw_delay.s
 
+navigation.c
+
 PartClasses\motorControl.c
+
+PartClasses\PhotoInterruptor.c
 
 PartClasses\RangingSensor.c
 

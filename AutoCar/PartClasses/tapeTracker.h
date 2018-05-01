@@ -10,6 +10,6 @@
 #define TAPETRACKER_H_
 
 void init_tracker();
-int onTrack();
+int offTrack();
 
 #endif /* TAPETRACKER_H_ */
