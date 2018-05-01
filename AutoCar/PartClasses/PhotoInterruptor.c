@@ -72,7 +72,7 @@ unsigned int get_rsteps() {
 unsigned int stepsToCm(unsigned int steps) {
 	unsigned int cm = 0;
 	
-	while (steps > NUM_SLOTS) {
+	while (steps >= NUM_SLOTS) {
 		steps -= NUM_SLOTS;
 		cm += CIRC;
 	}
@@ -84,13 +84,13 @@ unsigned int stepsToCm(unsigned int steps) {
 unsigned int cmToSteps(unsigned int cm) {
 	unsigned int steps = 0;
 	
-	while (cm > CIRC) {
+	while (cm >= CIRC) {
 		cm -= CIRC;
 		steps += NUM_SLOTS;
 	}
 	
 	steps += cm / STEP;
-	return cm;
+	return steps;
 }
 
 /* LINPUT_PIN external interrupt - Update left wheel time/distance

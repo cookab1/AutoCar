@@ -21,8 +21,7 @@ void go_straight(unsigned int cm, uint8_t speed, uint8_t direction) {
 		setDirectionForward();
 		
 	reset_steps();
-	rightSpeed(lspeed);
-	leftSpeed(rspeed);
+	setSpeed(speed);
 	
 	while (lsteps < steps && rsteps < steps) {	// || ?
 		get_steps(&lsteps, &rsteps);

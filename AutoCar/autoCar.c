@@ -35,9 +35,9 @@ int main(void)
 	//thread 0
     while (1) 
     {
-		go_straight(100, 0x80, FRWD);
+		go_straight(600, 0x80, FRWD);
 		x_delay(5000);
-		go_straight(100, 0x80, BKWD);
+		go_straight(600, 0x80, BKWD);
 		x_delay(5000);
 		/*
 		setDirectionBackward();
