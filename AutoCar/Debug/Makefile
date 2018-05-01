@@ -99,8 +99,8 @@ ADDITIONAL_DEPENDENCIES:=
 OUTPUT_FILE_DEP:= ./makedep.mk
 
 LIB_DEP+=  \
-C:/Users/Ryan/Documents/Atmel\ Studio/7.0/RoverBot/Libraries/libacx.a \
-C:/Users/Ryan/Documents/Atmel\ Studio/7.0/RoverBot/Libraries/libacxserial.a
+C:/Users/cookab1/Documents/Atmel\ Studio/7.0/AutoCar/AutoCar/libacx.a \
+C:/Users/cookab1/Documents/Atmel\ Studio/7.0/AutoCar/AutoCar/libacxserial.a
 
 LINKER_SCRIPT_DEP+= 
 

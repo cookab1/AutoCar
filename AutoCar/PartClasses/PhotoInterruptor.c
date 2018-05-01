@@ -23,8 +23,8 @@
 #define CIRC	   207	// circumference: 20.7cm (scaled by 10)
 #define STEP	   10	// arc length b/w slots: 1.0cm (scaled by 10)
 
-static unsigned int lsteps = 0;
-static unsigned int rsteps = 0;
+volatile static unsigned int lsteps = 0;
+volatile static unsigned int rsteps = 0;
 
 
 /* init_photoInterruptors - Initialize the pin settings and interrupts for the 

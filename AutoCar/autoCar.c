@@ -24,7 +24,7 @@ int main(void)
 	x_init();
 	//initialize threads
 	x_new(1, trackListener, true);
-	//x_new(2, blinky, true);
+	x_new(2, blinky, true);
 	//x_delay(5000);
 	//forward1s();
 	//backward1s();
@@ -38,6 +38,7 @@ int main(void)
 		go_straight(100, 0x80, FRWD);
 		x_delay(5000);
 		go_straight(100, 0x80, BKWD);
+		x_delay(5000);
 		/*
 		setDirectionBackward();
 		rightSpeed(0xA0);
@@ -50,7 +51,7 @@ int main(void)
 void trackListener() {
 	while(1) {
 		if(offTrack()) {
-			stop();
+			//stop();
 			//correct alignment
 		}
 		x_delay(5);
