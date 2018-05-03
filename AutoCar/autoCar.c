@@ -26,8 +26,6 @@ int main(void)
 	x_new(1, trackListener, true);
 	x_new(2, blinky, true);
 	//x_delay(5000);
-	//forward1s();
-	//backward1s();
 	
 	//setDirectionForward();
 	//rightSpeed(0xFF);
@@ -36,9 +34,8 @@ int main(void)
     while (1) 
     {
 		go_straight(600, 0xC0, FRWD);
-		x_delay(5000);
 		go_straight(600, 0xC0, BKWD);
-		x_delay(5000);
+		
 		/*
 		setDirectionBackward();
 		rightSpeed(0xA0);

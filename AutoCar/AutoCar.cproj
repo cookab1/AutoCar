@@ -78,6 +78,8 @@
     <ListValues>
       <Value>C:\Users\cookab1\Documents\Atmel Studio\7.0\AutoCar\AutoCar</Value>
       <Value>C:\Users\Ryan\Documents\Atmel Studio\7.0\RoverBot\Libraries</Value>
+      <Value>C:\Users\andyr\Documents\Atmel Studio\AutoCar\AutoCar</Value>
+      <Value>C:\Users\andyr\Documents\Atmel Studio\ACXExample\ACXExample</Value>
     </ListValues>
   </avrgcc.linker.libraries.LibrarySearchPaths>
   <avrgcc.assembler.general.IncludePaths>
@@ -127,6 +129,8 @@
     <ListValues>
       <Value>C:\Users\cookab1\Documents\Atmel Studio\7.0\AutoCar\AutoCar</Value>
       <Value>C:\Users\Ryan\Documents\Atmel Studio\7.0\RoverBot\Libraries</Value>
+      <Value>C:\Users\andyr\Documents\Atmel Studio\AutoCar\AutoCar</Value>
+      <Value>C:\Users\andyr\Documents\Atmel Studio\ACXExample\ACXExample</Value>
     </ListValues>
   </avrgcc.linker.libraries.LibrarySearchPaths>
   <avrgcc.assembler.general.IncludePaths>
