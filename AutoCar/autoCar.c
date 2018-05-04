@@ -10,7 +10,6 @@
 #include "PartClasses/tapeTracker.h"
 #include "PartClasses/motorControl.h"
 #include "PartClasses/RangingSensor.h"
-#include "PartClasses/PhotoInterruptor.h"
 #include "autoCar.h"
 #include "HelperClasses/acx.h"
 #include "HelperClasses/acxserial.h"
@@ -26,16 +25,16 @@ int main(void)
 	x_new(1, trackListener, true);
 	x_new(2, blinky, true);
 	//x_delay(5000);
+	//forward1s();
+	//backward1s();
 	
-	//setDirectionForward();
-	//rightSpeed(0xFF);
-	//leftSpeed(0xFF);
+	setDirectionForward();
+	rightSpeed(0xFF);
+	leftSpeed(0xFF);
 	//thread 0
     while (1) 
     {
-		go_straight(600, 0xC0, FRWD);
-		go_straight(600, 0xC0, BKWD);
-		
+		x_delay(100);
 		/*
 		setDirectionBackward();
 		rightSpeed(0xA0);
@@ -44,12 +43,38 @@ int main(void)
 		*/
 	}
 }
+void adjustForTrack(int i) {
+	
+	// if too far left
+	if (i == 1) {
+		//adjust to the right
+		pivot(4);
+	}
+	// if too far right
+	else if (i == 2) {
+		pivot(-4);
+	}
+	
+	// adjust to the left
+}
 
 void trackListener() {
 	while(1) {
-		if(offTrack()) {
-			//stop();
-			//correct alignment
+		/*
+		if(offTrack() == 1) {
+			adjustForTrack(1);
+		}
+		else if(offTrack() == 2) {
+			adjustForTrack(2);
+		}
+		*/
+		int i;
+		if(i = offTrack()) {
+			adjustForTrack(i);
+		} else {
+			setDirectionForward();
+			rightSpeed(0xFF);
+			leftSpeed(0xFF);
 		}
 		x_delay(5);
 	}
@@ -58,7 +83,6 @@ void trackListener() {
 void setUp() {
 	init_tracker();
 	init_motors();
-	init_photoInterruptors();
 }
 
 void blinky() {
@@ -68,6 +92,7 @@ void blinky() {
 		x_delay(100);
 	}
 }
+
 
 
 
