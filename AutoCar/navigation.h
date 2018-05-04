@@ -13,7 +13,7 @@
 #define BKWD 1
 
 void go_straight(unsigned int cm, uint8_t speed, uint8_t direction);
-
+void pivot (int);
 
 
 #endif /* NAVIGATION_H_ */

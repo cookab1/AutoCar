@@ -44,3 +44,24 @@ void go_straight(unsigned int cm, uint8_t speed, uint8_t direction) {
 
 	stop();
 }
+
+
+/**
+ * Turns specified number of "degrees" (in quotations because not very accurate)
+ * positive value turns right, negative value turns left
+ * 
+ * At speed A0, 1200ms delay turns about 90 degrees
+ */
+void pivot(int degrees) {
+	if (degrees < 0) {
+		rightDirectionForward();
+		leftDirectionBackward();
+	} else if (degrees > 0) {
+		rightDirectionBackward();
+		leftDirectionForward();	
+	}
+	
+	setSpeed(0xB0);
+	x_delay(degrees * 10);
+	stop();
+}
