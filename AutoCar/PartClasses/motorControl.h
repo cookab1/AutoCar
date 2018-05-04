@@ -16,6 +16,9 @@
 #define ENA PINB4
 #define ENB PINE3
 
+#define MIN_SPEED 0x90
+#define MAX_SPEED 0xFF
+
 
 void forward1s();
 void backward1s();

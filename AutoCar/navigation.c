@@ -15,6 +15,8 @@ void go_straight(unsigned int cm, uint8_t speed, uint8_t direction) {
 	uint8_t lspeed = speed;
 	uint8_t rspeed = speed;
 	
+	if (speed < MIN_SPEED)
+		return;
 	if (direction == BKWD)
 		setDirectionBackward();
 	else
@@ -23,17 +25,17 @@ void go_straight(unsigned int cm, uint8_t speed, uint8_t direction) {
 	reset_steps();
 	setSpeed(speed);
 	
-	while (lsteps < steps && rsteps < steps) {	// || ?
+	while (lsteps < steps && rsteps < steps) {
 		get_steps(&lsteps, &rsteps);
 		
 		if (rsteps > lsteps) {
-			if (rspeed > 0)
+			if (rspeed > MIN_SPEED)
 				rightSpeed(--rspeed);
 			else
 				leftSpeed(++lspeed);
 		}
 		else if (rsteps < lsteps) {
-			if (rspeed < 0xFF)
+			if (rspeed < MAX_SPEED)
 				rightSpeed(++rspeed);
 			else
 				leftSpeed(--lspeed);
