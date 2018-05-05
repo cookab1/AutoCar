@@ -11,37 +11,35 @@
 void go_straight(unsigned int cm, uint8_t speed, uint8_t direction) {
 	unsigned int lsteps = 0;
 	unsigned int rsteps = 0;
-	unsigned int steps = cmToSteps(cm);
-	uint8_t lspeed = speed;
-	uint8_t rspeed = speed;
-	
+	unsigned int steps = 0;
+	int error;
+	int kp = 5;		/* constant of proportionality */
+
 	if (speed < MIN_SPEED)
 		return;
 	if (direction == BKWD)
 		setDirectionBackward();
 	else
 		setDirectionForward();
-		
+
+	steps = cmToSteps(cm);
 	reset_steps();
 	setSpeed(speed);
 	
-	while (lsteps < steps && rsteps < steps) {
+	while (rsteps < steps && lsteps < steps) {
 		get_steps(&lsteps, &rsteps);
 		
-		if (rsteps > lsteps) {
-			if (rspeed > MIN_SPEED)
-				rightSpeed(--rspeed);
-			else
-				leftSpeed(++lspeed);
-		}
-		else if (rsteps < lsteps) {
-			if (rspeed < MAX_SPEED)
-				rightSpeed(++rspeed);
-			else
-				leftSpeed(--lspeed);
-		}
+		error = (rsteps - lsteps) / kp;
 		
-		x_delay(1);
+		if (error > 0 && MAX_SPEED - error < speed)
+			speed = MAX_SPEED;
+		else if (error < 0 && speed + error < MIN_SPEED)
+			speed = MIN_SPEED;
+		else
+			speed += error;
+		
+		leftSpeed(speed);		
+		x_delay(100);
 	}
 
 	stop();
