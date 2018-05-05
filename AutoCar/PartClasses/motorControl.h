@@ -17,6 +17,7 @@
 #define ENB PINE3
 
 #define MIN_SPEED 0x90
+#define MED_SPEED 0xC8	/* mean of MIN_SPEED and MAX_SPEED */
 #define MAX_SPEED 0xFF
 
 
