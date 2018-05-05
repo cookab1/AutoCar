@@ -18,6 +18,8 @@ void go_straight(unsigned int cm, uint8_t speed, uint8_t direction) {
 	unsigned int steps = 0;
 	int error;
 	int kp = 5;		/* constant of proportionality */
+	uint8_t lspeed = speed;
+	uint8_t rspeed = speed;
 
 	if (speed < MIN_SPEED)
 		return;
@@ -36,13 +38,14 @@ void go_straight(unsigned int cm, uint8_t speed, uint8_t direction) {
 		error = (rsteps - lsteps) / kp;
 		
 		if (error > 0 && MAX_SPEED - error < speed)
-			speed = MAX_SPEED;
+			lspeed = MAX_SPEED;
 		else if (error < 0 && speed + error < MIN_SPEED)
-			speed = MIN_SPEED;
+			lspeed = MIN_SPEED;
 		else
-			speed += error;
+			lspeed += error;
 		
-		leftSpeed(speed);		
+		rightSpeed(rspeed);
+		leftSpeed(lspeed);		
 		x_delay(100);
 	}
 
@@ -58,7 +61,8 @@ void go_forward_thread() {
 	unsigned int rsteps = 0;
 	int error;
 	int kp = 5;		/* constant of proportionality */
-	uint8_t speed = MED_SPEED;
+	uint8_t lspeed = MED_SPEED;
+	uint8_t rspeed = MED_SPEED;
 
 	reset_steps();
 	setSpeed(speed);
@@ -69,13 +73,14 @@ void go_forward_thread() {
 		error = (rsteps - lsteps) / kp;
 		
 		if (error > 0 && MAX_SPEED - error < speed)
-			speed = MAX_SPEED;
+			lspeed = MAX_SPEED;
 		else if (error < 0 && speed + error < MIN_SPEED)
-			speed = MIN_SPEED;
+			lspeed = MIN_SPEED;
 		else
-			speed += error;
+			lspeed += error;
 		
-		leftSpeed(speed);
+		rightSpeed(rspeed);
+		leftSpeed(lspeed);
 		x_delay(100);
 	}
 }
