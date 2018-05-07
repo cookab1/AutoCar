@@ -151,3 +151,39 @@ void obstacle_thread() {
         x_delay(1);
     }
 }
+
+void adjustForTrack(int i) {
+	
+	// if too far left
+	if (i == 1) {
+		//adjust to the right
+		pivot(8);
+		setDirectionForward();
+	}
+	// if too far right
+	else if (i == 2) {
+		pivot(-8);
+		setDirectionForward();
+	}
+}
+
+void trackListener() {
+	while(1) {
+		// if on the right
+		if(offTrack() == 1) {
+			stop();
+			adjustForTrack(1);
+		}
+		// if on the left
+		else if(offTrack() == 2) {
+			stop();
+			adjustForTrack(2);
+		}
+		else {
+			
+			setDirectionForward();
+			setSpeed(0xB0);
+		}
+		x_delay(1);
+	}
+}
