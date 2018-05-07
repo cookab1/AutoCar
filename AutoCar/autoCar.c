@@ -10,6 +10,7 @@
 #include "PartClasses/tapeTracker.h"
 #include "PartClasses/motorControl.h"
 #include "PartClasses/RangingSensor.h"
+#include "PartClasses/PhotoInterruptor.h"
 #include "autoCar.h"
 #include "HelperClasses/acx.h"
 #include "HelperClasses/acxserial.h"
@@ -22,25 +23,21 @@ int main(void)
 	
 	x_init();
 	//initialize threads
-	x_new(1, trackListener, true);
+	//x_new(1, trackListener, true);
 	x_new(2, blinky, true);
+	x_new(3, obstacle_thread, true);
+	x_new(0, go_forward_thread, true);
+	//x_delay(1000);
+	//x_new(4, go_forward_thread, true);
 	//x_delay(5000);
-	//forward1s();
-	//backward1s();
-	
-	setDirectionForward();
-	rightSpeed(0xFF);
-	leftSpeed(0xFF);
 	//thread 0
     while (1) 
     {
-		x_delay(100);
-		/*
-		setDirectionBackward();
-		rightSpeed(0xA0);
-		leftSpeed(0xA0);
-		x_delay(100);
-		*/
+		x_delay(1000);
+		go_straight(2000, MED_SPEED, FRWD);
+		x_delay(1000);
+		//go_straight(500, MED_SPEED, BKWD);
+		//pivot(180);
 	}
 }
 void adjustForTrack(int i) {
@@ -73,8 +70,8 @@ void trackListener() {
 			adjustForTrack(i);
 		} else {
 			setDirectionForward();
-			rightSpeed(0xFF);
-			leftSpeed(0xFF);
+			setRightSpeed(0xFF);
+			setLeftSpeed(0xFF);
 		}
 		x_delay(5);
 	}
@@ -83,13 +80,16 @@ void trackListener() {
 void setUp() {
 	init_tracker();
 	init_motors();
+	init_sensor();
+	init_photoInterruptors();
 }
 
 void blinky() {
-	DDRB = 0x80;
+	DDRB |= 0x80;
 	while(1) {
-		PORTB ^= 0x80;
+		PORTB |= 0x80;
 		x_delay(100);
+		PORTB &= 0x7F;
 	}
 }
 

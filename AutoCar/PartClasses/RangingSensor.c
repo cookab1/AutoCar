@@ -12,9 +12,6 @@
 #include "RangingSensor.h"
 #include "../HelperClasses/sw_delay.h"
 
-//#define TRIG_PIN (1 << PB3)
-//#define ECHO_PIN (1 << PB2)
-
 #define TRIG_PIN (1 << PB1)
 #define ECHO_PIN (1 << PB0)
 
@@ -50,8 +47,9 @@ uint16_t read_sensor() {
 	delay_usec(10);
 	PORTB &= ~TRIG_PIN;
 	
-	while (!reading)
-		x_delay(1);
+	//while (!reading)
+		//x_delay(1);
+	while (!reading);
 	
 	interval = reading * 4;	// convert to uS
 	reading = 0;

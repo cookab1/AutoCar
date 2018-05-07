@@ -17,9 +17,9 @@ void go_straight(unsigned int cm, uint8_t speed, uint8_t direction) {
 	unsigned int rsteps = 0;
 	unsigned int steps = 0;
 	int error;
-	int kp = 5;		/* constant of proportionality */
-	uint8_t lspeed = speed;
-	uint8_t rspeed = speed;
+	int kp = 3;		/* constant of proportionality */
+	uint8_t lspeed = speed - 6;
+	uint8_t rspeed = speed + 6;
 
 	if (speed < MIN_SPEED)
 		return;
@@ -30,22 +30,23 @@ void go_straight(unsigned int cm, uint8_t speed, uint8_t direction) {
 
 	steps = cmToSteps(cm);
 	reset_steps();
-	setSpeed(speed);
+	setLeftSpeed(lspeed);
+	setRightSpeed(rspeed);
 	
 	while (rsteps < steps && lsteps < steps) {
 		get_steps(&lsteps, &rsteps);
 		
 		error = (rsteps - lsteps) / kp;
 		
-		if (error > 0 && MAX_SPEED - error < speed)
+		if (error > 0 && MAX_SPEED - error < lspeed)
 			lspeed = MAX_SPEED;
-		else if (error < 0 && speed + error < MIN_SPEED)
+		else if (error < 0 && lspeed + error < MIN_SPEED)
 			lspeed = MIN_SPEED;
 		else
 			lspeed += error;
 		
-		rightSpeed(rspeed);
-		leftSpeed(lspeed);		
+		setRightSpeed(rspeed);
+		setLeftSpeed(lspeed);		
 		x_delay(100);
 	}
 
@@ -60,27 +61,31 @@ void go_forward_thread() {
 	unsigned int lsteps = 0;
 	unsigned int rsteps = 0;
 	int error;
-	int kp = 5;		/* constant of proportionality */
-	uint8_t lspeed = MED_SPEED;
-	uint8_t rspeed = MED_SPEED;
+	int kp = 3;		/* constant of proportionality */
+	uint8_t lspeed = MED_SPEED - 6;
+	uint8_t rspeed = MED_SPEED + 6;
 
 	reset_steps();
-	setSpeed(speed);
+	x_delay(1000);
+	setDirectionForward();
+	setRightSpeed(rspeed);
+	setLeftSpeed(lspeed);
 	
 	while (1) {
 		get_steps(&lsteps, &rsteps);
 		
 		error = (rsteps - lsteps) / kp;
 		
-		if (error > 0 && MAX_SPEED - error < speed)
+		if (error > 0 && MAX_SPEED - error < lspeed)
 			lspeed = MAX_SPEED;
-		else if (error < 0 && speed + error < MIN_SPEED)
+		else if (error < 0 && lspeed + error < MIN_SPEED)
 			lspeed = MIN_SPEED;
 		else
 			lspeed += error;
 		
-		rightSpeed(rspeed);
-		leftSpeed(lspeed);
+		setRightSpeed(rspeed);
+		setLeftSpeed(lspeed);
+		reset_steps();	/* avoid overflow */
 		x_delay(100);
 	}
 }
@@ -110,31 +115,37 @@ void pivot(int degrees) {
  * We need to work out values for stopdist and clearance.
  * stopdist: sensor reading required to trigger obstacle avoidance pivot
  * clearance: min sensor reading needed to stop pivoting (and go forward).
- * This is the third side of the right triangle formed by 1) the distance 
+ * This is the hypotenuse of the right triangle formed by 1) the distance 
  * between the middle of the sensor and the outer edge of a wheel (1/2 car width)
- * and 2) the sensor's 30 degree angle of operation. So:
- *    clearance = (1/2 car width) * tan(75)
+ * and 2) the sensor's 30 degree angle of operation (the hypotenuse). So:
+ *    clearance = (1/2 car width) / cos(75)
  * (assuming the sensor is centered on the car)
  */
 void obstacle_thread() {
     uint16_t reading;
-    uint16_t stopdist = 50; /* 5.0cm */
-    uint16_t clearance = 150;   /* min sensor reading to stop pivoting */
-    uint8_t num_readings = 5;
+    uint16_t stopdist = 300; /* 5.0cm */
+    uint16_t clearance = 300;   /* min sensor reading to stop pivoting (29.9cm) */
+    uint8_t lspeed, rspeed, num_readings = 5;
 
     while (1) {
         if ((reading = read_avg_sensor(num_readings)) <= stopdist) {
+			lspeed = getLeftSpeed();
+			rspeed = getRightSpeed();
             stop();
-            /* pivot incrementally */
-		    rightDirectionForward();
-		    leftDirectionBackward();
+            
+			/* pivot incrementally */
             while (reading < clearance) {
-                setSpeed(0xA0);
-                _delay_ms(20);	/* don't allow other threads to move the car */
+				rightDirectionForward();
+				leftDirectionBackward();
+				setSpeed(0xA0);
+                _delay_ms(300);	/* don't allow other threads to move the car */
                 stop();
-                reading = read_avg_sensor(num_readings);
+				reading = read_avg_sensor(10);
             }
+			stop();
             setDirectionForward();
+			setLeftSpeed(lspeed);
+			setRightSpeed(rspeed);
         }
         x_delay(1);
     }

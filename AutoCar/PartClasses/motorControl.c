@@ -19,24 +19,6 @@
 #include "../HelperClasses/acxserial.h"
 #include "motorControl.h"
 
-void forward1s() {
-	setDirectionForward();
-	rightSpeed(0xFF);
-	leftSpeed(0xFF);
-	//x_delay(1000);
-	_delay_ms(5000);
-	stop();
-}
-
-void backward1s() {
-	setDirectionBackward();
-	rightSpeed(0xA0);
-	leftSpeed(0xA0);
-	//x_delay(1000);
-	_delay_ms(1000);
-	stop();
-}
-
 /**
  * Direction forward for both wheels
  */
@@ -144,7 +126,7 @@ void leftDirectionBackward() {
  * Acceptable range for percent value: 0x90 to 0xFF
  * See setSpeed for full explanation.
  */
-void rightSpeed (uint8_t percent) {
+void setRightSpeed (uint8_t percent) {
 	OCR4A = percent;
 }
 
@@ -154,8 +136,16 @@ void rightSpeed (uint8_t percent) {
  * Acceptable range for percent value: 0x90 to 0xFF
  * See setSpeed for full explanation.
  */
-void leftSpeed (uint8_t percent) {
+void setLeftSpeed (uint8_t percent) {
 	OCR3A = percent;
+}
+
+uint8_t getLeftSpeed() {
+	return OCR3A;
+}
+
+uint8_t getRightSpeed() {
+	return OCR4A;
 }
 
 void rightStop() {

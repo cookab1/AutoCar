@@ -21,9 +21,6 @@
 #define MAX_SPEED 0xFF
 
 
-void forward1s();
-void backward1s();
-
 void init_motors();
 void setDirectionForward();
 void setDirectionBackward();
@@ -34,8 +31,10 @@ void leftDirectionForward();
 void rightDirectionForward();
 void leftDirectionBackward();
 void rightDirectionBackward();
-void leftSpeed(uint8_t);
-void rightSpeed(uint8_t);
+void setLeftSpeed(uint8_t);
+void setRightSpeed(uint8_t);
+uint8_t getLeftSpeed();
+uint8_t getRightSpeed();
 void leftStop();
 void rightStop();
 
