@@ -23,19 +23,22 @@ int main(void)
 	
 	x_init();
 	//initialize threads
-	//x_new(1, trackListener, true);
-	x_new(2, blinky, true);
-	x_new(3, obstacle_thread, true);
-	x_new(0, go_forward_thread, true);
+	x_new(1, trackListener, true);
+	//x_new(2, blinky, true);
+	//x_new(3, obstacle_thread, true);
+	//x_new(0, go_forward_thread, true);
 	//x_delay(1000);
 	//x_new(4, go_forward_thread, true);
 	//x_delay(5000);
 	//thread 0
     while (1) 
     {
-		x_delay(1000);
-		go_straight(2000, MED_SPEED, FRWD);
-		x_delay(1000);
+		x_delay(50);
+		//go_straight(1000, MED_SPEED, FRWD);
+		/*setDirectionForward();
+		setRightSpeed(0xFF);
+		setLeftSpeed(0xFF)
+		//x_delay(1000);*/
 		//go_straight(500, MED_SPEED, BKWD);
 		//pivot(180);
 	}
@@ -45,35 +48,34 @@ void adjustForTrack(int i) {
 	// if too far left
 	if (i == 1) {
 		//adjust to the right
-		pivot(4);
+		pivot(8);
+		setDirectionForward();
 	}
 	// if too far right
 	else if (i == 2) {
-		pivot(-4);
+		pivot(-8);
+		setDirectionForward();
 	}
-	
-	// adjust to the left
 }
 
 void trackListener() {
 	while(1) {
-		/*
+		// if on the right
 		if(offTrack() == 1) {
+			stop();
 			adjustForTrack(1);
 		}
+		// if on the left
 		else if(offTrack() == 2) {
+			stop();
 			adjustForTrack(2);
 		}
-		*/
-		int i;
-		if(i = offTrack()) {
-			adjustForTrack(i);
-		} else {
+		else {
+			
 			setDirectionForward();
-			setRightSpeed(0xFF);
-			setLeftSpeed(0xFF);
+			setSpeed(0xB0);
 		}
-		x_delay(5);
+		x_delay(1);
 	}
 }
 
@@ -84,14 +86,15 @@ void setUp() {
 	init_photoInterruptors();
 }
 
-void blinky() {
-	DDRB |= 0x80;
+/*void blinky() {
+	DDRB = 0x80;
 	while(1) {
-		PORTB |= 0x80;
+		PORTB = 0x80;
 		x_delay(100);
-		PORTB &= 0x7F;
+		PORTB = 0x00;
+		x_delay(100);
 	}
-}
+}*/
 
 
 

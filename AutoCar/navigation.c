@@ -99,6 +99,7 @@ void go_forward_thread() {
  */
 void pivot(int degrees) {
 	if (degrees < 0) {
+		degrees = -degrees;
 		rightDirectionForward();
 		leftDirectionBackward();
 	} else if (degrees > 0) {
