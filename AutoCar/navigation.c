@@ -129,8 +129,8 @@ void obstacle_thread() {
             stop();
 			/* pivot incrementally */
             while (reading < clearance) {
-				rightDirectionForward();
-				leftDirectionBackward();
+				leftDirectionForward();
+				rightDirectionBackward();
 				setSpeed(0xA0);
                 _delay_ms(300);	/* don't allow other threads to move the car */
                 stop();
