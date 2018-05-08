@@ -131,7 +131,7 @@ void obstacle_thread() {
             while (reading < clearance) {
 				leftDirectionForward();
 				rightDirectionBackward();
-				setSpeed(0xA0);
+				setSpeed(0xC0);
                 _delay_ms(300);	/* don't allow other threads to move the car */
                 stop();
 				reading = read_avg_sensor(10);
