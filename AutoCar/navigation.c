@@ -32,7 +32,7 @@ void go_straight(unsigned int cm, uint8_t speed, uint8_t direction) {
 	setLeftSpeed(lspeed);
 	setRightSpeed(rspeed);
 	
-	while (ltotal < total && rtotal < total) {
+	while (ltotal < total || rtotal < total) {
 		get_steps(&lsteps, &rsteps);
 		ltotal += lsteps;
 		rtotal += rsteps;
