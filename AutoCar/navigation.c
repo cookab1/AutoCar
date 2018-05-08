@@ -13,13 +13,12 @@
  * kp and the delay.
  */
 void go_straight(unsigned int cm, uint8_t speed, uint8_t direction) {
-	unsigned int lsteps = 0;
-	unsigned int rsteps = 0;
-	unsigned int steps = 0;
+	unsigned int lsteps = 0, rsteps = 0;
+	unsigned int ltotal = 0, rtotal = 0, total = 0;
+	uint8_t lspeed = (speed >= MIN_SPEED + 6) ? speed - 6 : speed;
+	uint8_t rspeed = speed;
 	int error;
-	int kp = 3;		/* constant of proportionality */
-	uint8_t lspeed = speed - 6;
-	uint8_t rspeed = speed + 6;
+	int kp = 6;		/* constant of proportionality */
 
 	if (speed < MIN_SPEED)
 		return;
@@ -27,14 +26,16 @@ void go_straight(unsigned int cm, uint8_t speed, uint8_t direction) {
 		setDirectionBackward();
 	else
 		setDirectionForward();
-
-	steps = cmToSteps(cm);
+	
 	reset_steps();
+	total = cmToSteps(cm);
 	setLeftSpeed(lspeed);
 	setRightSpeed(rspeed);
 	
-	while (rsteps < steps && lsteps < steps) {
+	while (ltotal < total && rtotal < total) {
 		get_steps(&lsteps, &rsteps);
+		ltotal += lsteps;
+		rtotal += rsteps;
 		
 		error = (rsteps - lsteps) / kp;
 		
@@ -45,9 +46,10 @@ void go_straight(unsigned int cm, uint8_t speed, uint8_t direction) {
 		else
 			lspeed += error;
 		
-		setRightSpeed(rspeed);
-		setLeftSpeed(lspeed);		
-		x_delay(100);
+		reset_steps();
+		setLeftSpeed(lspeed);
+		setRightSpeed(rspeed);		
+		x_delay(300);
 	}
 
 	stop();
@@ -61,12 +63,11 @@ void go_forward_thread() {
 	unsigned int lsteps = 0;
 	unsigned int rsteps = 0;
 	int error;
-	int kp = 3;		/* constant of proportionality */
+	int kp = 6;		/* constant of proportionality */
 	uint8_t lspeed = MED_SPEED - 6;
-	uint8_t rspeed = MED_SPEED + 6;
+	uint8_t rspeed = MED_SPEED;
 
 	reset_steps();
-	x_delay(1000);
 	setDirectionForward();
 	setRightSpeed(rspeed);
 	setLeftSpeed(lspeed);
@@ -86,7 +87,7 @@ void go_forward_thread() {
 		setRightSpeed(rspeed);
 		setLeftSpeed(lspeed);
 		reset_steps();	/* avoid overflow */
-		x_delay(100);
+		x_delay(300);
 	}
 }
 
@@ -112,20 +113,13 @@ void pivot(int degrees) {
 	stop();
 }
 
-/* Work in progress:
- * We need to work out values for stopdist and clearance.
- * stopdist: sensor reading required to trigger obstacle avoidance pivot
- * clearance: min sensor reading needed to stop pivoting (and go forward).
- * This is the hypotenuse of the right triangle formed by 1) the distance 
- * between the middle of the sensor and the outer edge of a wheel (1/2 car width)
- * and 2) the sensor's 30 degree angle of operation (the hypotenuse). So:
- *    clearance = (1/2 car width) / cos(75)
- * (assuming the sensor is centered on the car)
+/* obstacle_thread - Continuously take readings from the sensor. If a reading
+ *     is below 
  */
 void obstacle_thread() {
     uint16_t reading;
-    uint16_t stopdist = 300; /* 5.0cm */
-    uint16_t clearance = 300;   /* min sensor reading to stop pivoting (29.9cm) */
+    uint16_t stopdist = 100; /* 10.0cm */
+    uint16_t clearance = 320;   /* min sensor reading to stop pivoting (29.9cm) */
     uint8_t lspeed, rspeed, num_readings = 5;
 
     while (1) {
@@ -133,7 +127,6 @@ void obstacle_thread() {
 			lspeed = getLeftSpeed();
 			rspeed = getRightSpeed();
             stop();
-            
 			/* pivot incrementally */
             while (reading < clearance) {
 				rightDirectionForward();
@@ -143,8 +136,8 @@ void obstacle_thread() {
                 stop();
 				reading = read_avg_sensor(10);
             }
-			stop();
             setDirectionForward();
+			reset_steps();
 			setLeftSpeed(lspeed);
 			setRightSpeed(rspeed);
         }
@@ -152,38 +145,37 @@ void obstacle_thread() {
     }
 }
 
-void adjustForTrack(int i) {
-	
+/*
+ */
+void adjustForTrack(int i) {	
 	// if too far left
 	if (i == 1) {
 		//adjust to the right
 		pivot(8);
-		setDirectionForward();
 	}
 	// if too far right
 	else if (i == 2) {
 		pivot(-8);
-		setDirectionForward();
 	}
 }
 
-void trackListener() {
-	while(1) {
-		// if on the right
-		if(offTrack() == 1) {
+/*
+ */
+void trackListener_thread() {
+	int state;
+	
+	while(1) {		
+		state = offTrack();
+		
+		if (state == 1 || state == 2) {
 			stop();
-			adjustForTrack(1);
-		}
-		// if on the left
-		else if(offTrack() == 2) {
-			stop();
-			adjustForTrack(2);
+			adjustForTrack(state);
 		}
 		else {
-			
 			setDirectionForward();
 			setSpeed(0xB0);
 		}
+
 		x_delay(1);
 	}
 }

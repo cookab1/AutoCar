@@ -9,8 +9,11 @@
 #ifndef AUTOCAR_H_
 #define AUTOCAR_H_
 
-void trackListener();
 void setUp();
+void test_one();
+void test_two();
+void test_three();
+void test_four();
 void blinky();
 
 #endif /* AUTOCAR_H_ */

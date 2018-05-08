@@ -8,12 +8,13 @@
 #include <avr/io.h>
 #include <util/delay.h>
 
-int pinUsed;
+#define RIGHTPIN (1 << PF0)
+#define LEFTPIN  (1 << PF1)
 
 void init_tracker()
 {
-	//pinUsed = pin;
-	DDRF = 0x00;
+	// set pins for input
+	DDRF &= ~(RIGHTPIN | LEFTPIN);
 }
 
 // reading 0 is seeing tape
@@ -24,11 +25,11 @@ void init_tracker()
 int offTrack()
 {
 	// check if on the right
-	if ((PINF & 0x03) == 0x01) {
+	if ((PINF & 0x03) == RIGHTPIN) {
 		return 1; 
 	}
 	// check if on the left
-	if ((PINF & 0x03) == 0x02) {
+	if ((PINF & 0x03) == LEFTPIN) {
 		return 2;
 	}
 	// if not obstacle on left or right return 0. Also returns 0 for both.
