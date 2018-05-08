@@ -13,7 +13,7 @@
 #define IN2 PINC1
 #define IN3 PINC2
 #define IN4 PINC3
-#define ENA PINB4
+#define ENA PINH3
 #define ENB PINE3
 
 #define MIN_SPEED 0x90
