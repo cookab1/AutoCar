@@ -1,3 +1,6 @@
+*.atsuo
+AutoCar/Debug/*
+
 # Prerequisites
 *.d
 

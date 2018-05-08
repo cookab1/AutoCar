@@ -77,27 +77,21 @@ unsigned int get_rsteps() {
 }
 
 unsigned int stepsToCm(unsigned int steps) {
-	unsigned int cm = 0;
+	unsigned int revs, rem;
 	
-	while (steps >= NUM_SLOTS) {
-		steps -= NUM_SLOTS;
-		cm += CIRC;
-	}
+	revs = steps / NUM_SLOTS;
+	rem = steps - (revs * NUM_SLOTS);
 	
-	cm += steps * STEP;
-	return cm;
+	return (revs * CIRC) + (rem * STEP);
 }
 
 unsigned int cmToSteps(unsigned int cm) {
-	unsigned int steps = 0;
+	unsigned int revs, rem;
 	
-	while (cm >= CIRC) {
-		cm -= CIRC;
-		steps += NUM_SLOTS;
-	}
+	revs = cm / CIRC;
+	rem = cm - (revs * CIRC);
 	
-	steps += cm / STEP;
-	return steps;
+	return (revs * NUM_SLOTS) + (rem / STEP);
 }
 
 ISR(PCINT1_vect) {
